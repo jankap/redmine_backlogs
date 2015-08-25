@@ -1,10 +1,14 @@
 class CreateStoriesTasksSprintsAndBurndown < ActiveRecord::Migration
   def self.up
-    add_column :issues, :position, :integer
-    add_column :issues, :story_points, :integer
-    add_column :issues, :remaining_hours, :float
+    unless ActiveRecord::Base.connection.column_exists?(:issues, :position)
+    	add_column :issues, :position, :integer
+	add_column :issues, :story_points, :integer
+        add_column :issues, :remaining_hours, :float
+    end
 
-    add_column :versions, :sprint_start_date, :date, :null => true
+    unless ActiveRecord::Base.connection.column_exists?(:versions, :sprint_start_date)
+        add_column :versions, :sprint_start_date, :date, :null => true
+    end
 
     create_table :burndown_days do |t|
       t.column :points_committed, :integer, :null => false, :default => 0
